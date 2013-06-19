@@ -1,8 +1,8 @@
 import urllib
+from hashlib import md5
 
 from django import template
 from django.utils.translation import ugettext as _
-from django.utils.hashcompat import md5_constructor
 from django.core.urlresolvers import reverse
 
 from django.contrib.auth.models import User
@@ -26,7 +26,7 @@ def avatar_url(user, size=AVATAR_DEFAULT_SIZE):
             if AVATAR_GRAVATAR_DEFAULT:
                 params['d'] = AVATAR_GRAVATAR_DEFAULT
             return "http://www.gravatar.com/avatar/%s/?%s" % (
-                md5_constructor(user.email).hexdigest(),
+                md5(user.email).hexdigest(),
                 urllib.urlencode(params))
         else:
             return get_default_avatar_url()
@@ -53,7 +53,7 @@ def avatar(user, size=AVATAR_DEFAULT_SIZE):
 def primary_avatar(user, size=AVATAR_DEFAULT_SIZE):
     """
     This tag tries to get the default avatar for a user without doing any db
-    requests. It achieve this by linking to a special view that will do all the 
+    requests. It achieve this by linking to a special view that will do all the
     work for us. If that special view is then cached by a CDN for instance,
     we will avoid many db calls.
     """
